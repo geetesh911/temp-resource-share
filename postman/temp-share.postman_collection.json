@@ -1,0 +1,230 @@
+{
+    "info": {
+        "_postman_id": "unique-id",
+        "name": "Temp Share API",
+        "description": "API collection for temporary resource sharing service",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"securepassword\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/register",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["auth", "register"]
+                        },
+                        "description": "Register a new user"
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"securepassword\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["auth", "login"]
+                        },
+                        "description": "Login with existing credentials"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Resources",
+            "item": [
+                {
+                    "name": "Create Resource (File)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{authToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "file",
+                                    "type": "file",
+                                    "src": []
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "My File Resource",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "expirationTime",
+                                    "value": "2024-01-01T00:00:00.000Z",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/resources",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["resources"]
+                        },
+                        "description": "Create a new resource"
+                    }
+                },
+                {
+                    "name": "Create Resource (URL)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{authToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"My URL Resource\",\n    \"resourceUrl\": \"https://example.com/resource\",\n    \"expirationTime\": \"2024-01-01T00:00:00.000Z\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/resources",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["resources"]
+                        },
+                        "description": "Create a new resource"
+                    }
+                },
+                {
+                    "name": "Get Resources",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{authToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/resources?status=active",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["resources"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "active",
+                                    "description": "Filter by status (active/expired)",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Get all resources for the authenticated user"
+                    }
+                },
+                {
+                    "name": "Get Resource by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{authToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/resources/{{resourceId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["resources", "{{resourceId}}"]
+                        },
+                        "description": "Get a specific resource by ID"
+                    }
+                },
+                {
+                    "name": "Access Resource",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{authToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/resources/access/{{accessToken}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["resources", "access", "{{accessToken}}"]
+                        },
+                        "description": "Access a resource using its access token (public route)"
+                    }
+                },
+                {
+                    "name": "Delete Resource",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{authToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/resources/{{resourceId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["resources", "{{resourceId}}"]
+                        },
+                        "description": "Delete a specific resource"
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "authToken",
+            "value": "your-auth-token",
+            "type": "string"
+        },
+        {
+            "key": "resourceId",
+            "value": "resource-uuid",
+            "type": "string"
+        },
+        {
+            "key": "accessToken",
+            "value": "resource-access-token",
+            "type": "string"
+        }
+    ]
+}
